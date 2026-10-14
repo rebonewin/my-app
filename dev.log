@@ -1,0 +1,1783 @@
+
+> my-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.4.0 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.3.56:3000
+✓ Ready in 307ms
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\HP because it is outside the current Git repository (C:\Users\HP\my-app).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+✓ Running next.config.ts took 27ms
+- Cache Components enabled
+- Partial Prefetching enabled
+- Experiments (use with caution):
+  ✓ agentFeedback
+
+ GET / 200 in 462ms (next.js: 379ms, application-code: 83ms)
+ GET / 200 in 34ms (next.js: 1.5ms, application-code: 32ms)
+ GET /dashboard 200 in 30ms (next.js: 8ms, application-code: 21ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /scanner 200 in 25ms (next.js: 10ms, application-code: 15ms)
+ GET / 200 in 32ms (next.js: 1.6ms, application-code: 30ms)
+ GET / 200 in 22ms (next.js: 1.5ms, application-code: 20ms)
+ GET /dashboard 200 in 68ms (next.js: 4ms, application-code: 64ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /scanner 200 in 51ms (next.js: 5ms, application-code: 46ms)
+ GET /scanner 200 in 40ms (next.js: 5ms, application-code: 35ms)
+ GET /reports 404 in 478ms (next.js: 452ms, application-code: 26ms)
+ GET /reports 404 in 47ms (next.js: 11ms, application-code: 37ms)
+ GET /reports 404 in 63ms (next.js: 12ms, application-code: 51ms)
+ GET / 200 in 49ms (next.js: 2ms, application-code: 47ms)
+ GET / 200 in 43ms (next.js: 3ms, application-code: 40ms)
+ GET /dashboard 200 in 34ms (next.js: 4ms, application-code: 30ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /scanner 200 in 23ms (next.js: 2.0ms, application-code: 21ms)
+ GET /scanner 200 in 27ms (next.js: 2ms, application-code: 25ms)
+ GET /dashboard 200 in 41ms (next.js: 2ms, application-code: 39ms)
+ GET / 200 in 43ms (next.js: 2ms, application-code: 41ms)
+[browser] ./app/scanner/page.tsx:44:14
+Error: await isn't allowed in non-async function
+  42 | });
+  43 |
+> 44 | const scan = await res.json();
+     |              ^^^^^
+  45 |
+  46 |         setResult(scan);
+  47 |         setLoading(false);
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:80:9
+Error: Expression expected
+  78 |         >
+  79 |           const startScan = async () => {
+> 80 |         </button>
+     |         ^
+  81 |
+  82 |       </div>
+  83 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:79:39
+Error: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  77 |           className="rounded-xl bg-cyan-500 px-8 font-bold text-black transition hover:bg-...
+  78 |         >
+> 79 |           const startScan = async () => {
+     |                                       ^
+  80 |         </button>
+  81 |
+  82 |       </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:80:10
+Error: Unterminated regexp literal
+  78 |         >
+  79 |           const startScan = async () => {
+> 80 |         </button>
+     |          ^^^^^^^^
+  81 |
+  82 |       </div>
+  83 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:44:14
+Error: await isn't allowed in non-async function
+  42 | });
+  43 |
+> 44 | const scan = await res.json();
+     |              ^^^^^
+  45 |
+  46 |         setResult(scan);
+  47 |         setLoading(false);
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:80:9
+Error: Expression expected
+  78 |         >
+  79 |           const startScan = async () => {
+> 80 |         </button>
+     |         ^
+  81 |
+  82 |       </div>
+  83 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:79:39
+Error: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  77 |           className="rounded-xl bg-cyan-500 px-8 font-bold text-black transition hover:bg-...
+  78 |         >
+> 79 |           const startScan = async () => {
+     |                                       ^
+  80 |         </button>
+  81 |
+  82 |       </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:80:10
+Error: Unterminated regexp literal
+  78 |         >
+  79 |           const startScan = async () => {
+> 80 |         </button>
+     |          ^^^^^^^^
+  81 |
+  82 |       </div>
+  83 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:44:14
+Error: await isn't allowed in non-async function
+  42 | });
+  43 |
+> 44 | const scan = await res.json();
+     |              ^^^^^
+  45 |
+  46 |         setResult(scan);
+  47 |         setLoading(false);
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:80:9
+Error: Expression expected
+  78 |         >
+  79 |           const startScan = async () => {
+> 80 |         </button>
+     |         ^
+  81 |
+  82 |       </div>
+  83 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:79:39
+Error: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  77 |           className="rounded-xl bg-cyan-500 px-8 font-bold text-black transition hover:bg-...
+  78 |         >
+> 79 |           const startScan = async () => {
+     |                                       ^
+  80 |         </button>
+  81 |
+  82 |       </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:80:10
+Error: Unterminated regexp literal
+  78 |         >
+  79 |           const startScan = async () => {
+> 80 |         </button>
+     |          ^^^^^^^^
+  81 |
+  82 |       </div>
+  83 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./app/scanner/page.tsx:44:14
+Error: await isn't allowed in non-async function
+  42 | });
+  43 |
+> 44 | const scan = await res.json();
+     |              ^^^^^
+  45 |
+  46 |         setResult(scan);
+  47 |         setLoading(false);
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+✓ Compiled in 57ms
+ GET / 200 in 23ms (next.js: 1.9ms, application-code: 21ms)
+✓ Compiled in 56ms
+ GET / 200 in 29ms (next.js: 3ms, application-code: 26ms)
+✓ Compiled in 62ms
+ GET / 200 in 36ms (next.js: 3ms, application-code: 33ms)
+ GET /reports 404 in 83ms (next.js: 32ms, application-code: 51ms)
+ GET / 200 in 29ms (next.js: 1.3ms, application-code: 28ms)
+ GET /dashboard 200 in 36ms (next.js: 5ms, application-code: 30ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /scanner 200 in 24ms (next.js: 2ms, application-code: 22ms)
+ POST /api/scan 200 in 708ms (next.js: 252ms, application-code: 456ms)
+✓ Compiled in 67ms
+ GET /dashboard 200 in 180ms (next.js: 1.7ms, application-code: 179ms)
+✓ Compiled in 61ms
+ GET /scanner 200 in 23ms (next.js: 2.0ms, application-code: 21ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /api/scan 200 in 302ms (next.js: 5ms, application-code: 298ms)
+ GET /reports 404 in 33ms (next.js: 13ms, application-code: 20ms)
+ GET /reports 404 in 40ms (next.js: 9ms, application-code: 31ms)
+ GET /dashboard 200 in 34ms (next.js: 1.3ms, application-code: 33ms)
+✓ Compiled in 40ms
+ GET /scanner 200 in 26ms (next.js: 2ms, application-code: 24ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /api/scan 200 in 345ms (next.js: 3ms, application-code: 342ms)
+ POST /api/scan 200 in 363ms (next.js: 4ms, application-code: 359ms)
+ POST /api/scan 200 in 340ms (next.js: 5ms, application-code: 335ms)
+ POST /api/scan 200 in 258ms (next.js: 7ms, application-code: 251ms)
+ POST /api/scan 200 in 382ms (next.js: 3ms, application-code: 379ms)
+ POST /api/scan 200 in 368ms (next.js: 5ms, application-code: 363ms)
+✓ Compiled in 53ms
+ GET /scanner 200 in 26ms (next.js: 3ms, application-code: 23ms)
+✓ Compiled in 28ms
+ GET /scanner 200 in 27ms (next.js: 3ms, application-code: 24ms)
+[browser] ./components/ScanResult.tsx:167:13
+Error: Expected '</', got '<eof>'
+  165 |         </div>
+  166 |
+> 167 |       </div>
+      |             ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:168:7
+Error: Expected '</', got '<eof>'
+  166 |
+  167 |       </div>
+> 168 |       
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+ POST /api/scan 200 in 289ms (next.js: 1.3ms, application-code: 287ms)
+ GET /scanner 200 in 47ms (next.js: 3ms, application-code: 45ms)
+ POST /api/scan 200 in 782ms (next.js: 2ms, application-code: 780ms)
+ POST /api/scan 200 in 301ms (next.js: 4ms, application-code: 297ms)
+✓ Compiled in 42ms
+✓ Compiled in 69ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 44ms
+ GET /scanner 200 in 53ms (next.js: 3ms, application-code: 49ms)
+ POST /api/scan 200 in 415ms (next.js: 4ms, application-code: 411ms)
+✓ Compiled in 41ms
+✓ Compiled in 41ms
+ POST /api/scan 200 in 312ms (next.js: 3ms, application-code: 309ms)
+✓ Compiled in 43ms
+✓ Compiled in 49ms
+[browser] ./app/scanner/page.tsx:61:3
+Error: 'import', and 'export' cannot be used outside of module code
+  59 |   };
+  60 |
+> 61 |   export default function Sidebar() {
+     |   ^^^^^^
+  62 |   const menus = [
+  63 |     "Dashboard",
+  64 |     "New Scan",
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+✓ Compiled in 30ms
+ GET /scanner 200 in 27ms (next.js: 3ms, application-code: 25ms)
+✓ Compiled in 38ms
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames {
+  page: '/scanner'
+}
+ GET /scanner 500 in 1846ms (next.js: 1321ms, application-code: 524ms)
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames {
+  page: '/scanner'
+}
+ GET /scanner 500 in 68ms (next.js: 53ms, application-code: 14ms)
+[browser] Uncaught Error: The default export is not a React Component in "/scanner/page"
+✓ Compiled in 42ms
+ GET /scanner 200 in 37ms (next.js: 2ms, application-code: 35ms)
+ POST /api/scan 200 in 1682ms (next.js: 4ms, application-code: 1678ms)
+ POST /api/scan 200 in 1192ms (next.js: 6ms, application-code: 1186ms)
+ POST /api/scan 200 in 3.4s (next.js: 13ms, application-code: 3.4s)
+✓ Compiled in 44ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /scanner 200 in 35ms (next.js: 2ms, application-code: 32ms)
+✓ Compiled in 43ms
+ GET /scanner 200 in 50ms (next.js: 1.9ms, application-code: 48ms)
+ GET /scanner 200 in 33ms (next.js: 2.0ms, application-code: 31ms)
+ POST /api/scan 200 in 685ms (next.js: 4ms, application-code: 682ms)
+[browser] Uncaught TypeError: Cannot read properties of undefined (reading 'valid')
+    at DashboardSummary (components/DashboardSummary.tsx:136:15)
+    at Scanner (app/scanner/page.tsx:135:15)
+  134 |       <div
+  135 |         className={`rounded-2xl p-6 border ${
+> 136 |           ssl.valid
+      |               ^
+  137 |           ? "bg-green-950 border-green-500"
+  138 |           : "bg-red-950 border-red-500"
+  139 |         }`}
+ GET /scanner 200 in 45ms (next.js: 3ms, application-code: 42ms)
+✓ Compiled in 44ms
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames {
+  page: '/scanner'
+}
+ GET /scanner 500 in 38ms (next.js: 28ms, application-code: 9ms)
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames
+⨯ Error: The default export is not a React Component in "/scanner/page"
+    at ignore-listed frames {
+  page: '/scanner'
+}
+ GET /scanner 500 in 30ms (next.js: 24ms, application-code: 6ms)
+[browser] Uncaught Error: The default export is not a React Component in "/scanner/page"
+✓ Compiled in 42ms
+ GET /scanner 200 in 35ms (next.js: 2.0ms, application-code: 33ms)
+ GET /scanner 200 in 32ms (next.js: 1.5ms, application-code: 30ms)
+ POST /api/scan 200 in 1288ms (next.js: 2.0ms, application-code: 1286ms)
+✓ Compiled in 59ms
+✓ Compiled in 28ms
+ GET /scanner 200 in 43ms (next.js: 16ms, application-code: 27ms)
+[browser] ./components/Sidebar.tsx:11:5
+Error: Expression expected
+   9 |
+  10 |   return (
+> 11 |     <
+     |     ^
+  12 |
+  13 |       <div className="border-b border-slate-800 p-6">
+  14 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/Sidebar.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/Sidebar.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Server Component] 
+[browser] ./components/Sidebar.tsx:11:5
+Error: Expression expected
+   9 |
+  10 |   return (
+> 11 |     <<aside className="relative w-64 min-h-screen border-r border-slate-800 bg-slate-950">
+     |     ^^
+  12 |
+  13 |       <div className="border-b border-slate-800 p-6">
+  14 |
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/Sidebar.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Client Component Browser]
+    ./app/dashboard/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/Sidebar.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Client Component SSR]
+    ./app/dashboard/page.tsx [Server Component] 
+✓ Compiled in 42ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /scanner 200 in 35ms (next.js: 2ms, application-code: 33ms)
+✓ Compiled in 36ms
+ GET /scanner 200 in 21ms (next.js: 1.4ms, application-code: 19ms)
+ GET /scanner 200 in 19ms (next.js: 1.0ms, application-code: 18ms)
+ GET /scanner 200 in 30ms (next.js: 1.2ms, application-code: 29ms)
+ POST /api/scan 200 in 503ms (next.js: 1.1ms, application-code: 502ms)
+ GET /dashboard 200 in 36ms (next.js: 20ms, application-code: 17ms)
+ GET / 200 in 21ms (next.js: 1.4ms, application-code: 20ms)
+ GET /dashboard 200 in 17ms (next.js: 1.6ms, application-code: 15ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /dashboard/new%20scan 404 in 38ms (next.js: 17ms, application-code: 21ms)
+ GET /dashboard 200 in 21ms (next.js: 1.1ms, application-code: 20ms)
+ GET /dashboard/scanner 404 in 36ms (next.js: 10ms, application-code: 25ms)
+ GET /dashboard 200 in 20ms (next.js: 1.0ms, application-code: 19ms)
+✓ Compiled in 28ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 66ms
+ GET /dashboard 200 in 64ms (next.js: 2ms, application-code: 61ms)
+ GET /dashboard 200 in 23ms (next.js: 1.4ms, application-code: 22ms)
+ GET /scanner 200 in 14ms (next.js: 1.9ms, application-code: 13ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /history 404 in 35ms (next.js: 11ms, application-code: 24ms)
+ GET /history 404 in 65ms (next.js: 8ms, application-code: 57ms)
+ GET /scanner 200 in 24ms (next.js: 1.2ms, application-code: 23ms)
+ GET /scanner 200 in 14ms (next.js: 2ms, application-code: 12ms)
+ GET / 200 in 13ms (next.js: 1.2ms, application-code: 12ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /dashboard 200 in 17ms (next.js: 1.3ms, application-code: 16ms)
+ GET /scanner 200 in 15ms (next.js: 1.4ms, application-code: 14ms)
+ POST /api/scan 200 in 1166ms (next.js: 2ms, application-code: 1164ms)
+ GET / 200 in 24ms (next.js: 1.4ms, application-code: 22ms)
+ GET /dashboard 200 in 17ms (next.js: 1.6ms, application-code: 15ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /scanner 200 in 15ms (next.js: 1.3ms, application-code: 14ms)
+ POST /api/scan 200 in 374ms (next.js: 1.4ms, application-code: 372ms)
+ POST /api/scan 200 in 366ms (next.js: 1.3ms, application-code: 365ms)
+ GET /scanner 200 in 32ms (next.js: 1.7ms, application-code: 31ms)
+ POST /api/scan 200 in 8.2s (next.js: 3ms, application-code: 8.2s)
+✓ Compiled in 41ms
+✓ Compiled in 25ms
+✓ Compiled in 19ms
+✓ Compiled in 44ms
+✓ Compiled in 43ms
+[browser] ./components/ScanResult.tsx:408:12
+Error: Expected '</', got '<eof>'
+  406 |
+  407 |       {/* ================= RECOMMENDATIONS ================= */}
+> 408 |            
+      |            ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:407:66
+Error: Expected '</', got '<eof>'
+  405 |       </div>
+  406 |
+> 407 |       {/* ================= RECOMMENDATIONS ================= */}
+      |                                                                  ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:408:7
+Error: Expected '</', got '<eof>'
+  406 |
+  407 |       {/* ================= RECOMMENDATIONS ================= */}
+> 408 |       
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:581:7
+Error: Expected '</', got '<eof>'
+  579 |
+  580 |
+> 581 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:579:7
+Error: Expected '</', got '<eof>'
+  577 |
+  578 |
+> 579 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+⨯ ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  [90m578 |[0m
+  [90m579 |[0m
+[31m[1m>[0m [90m580 |[0m </div>
+  [90m    |[0m       [31m[1m^[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+ GET /scanner 500 in 314ms (next.js: 258ms, application-code: 57ms)
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+⨯ ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  [90m578 |[0m
+  [90m579 |[0m
+[31m[1m>[0m [90m580 |[0m </div>
+  [90m    |[0m       [31m[1m^[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+ GET /scanner 500 in 10ms (next.js: 4ms, application-code: 6ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+⨯ ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  [90m578 |[0m
+  [90m579 |[0m
+[31m[1m>[0m [90m580 |[0m </div>
+  [90m    |[0m       [31m[1m^[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+ GET /scanner 500 in 9ms (next.js: 4ms, application-code: 5ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+⨯ ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  [90m578 |[0m
+  [90m579 |[0m
+[31m[1m>[0m [90m580 |[0m </div>
+  [90m    |[0m       [31m[1m^[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+ GET /scanner 500 in 8ms (next.js: 4ms, application-code: 4ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+⨯ ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  [90m578 |[0m
+  [90m579 |[0m
+[31m[1m>[0m [90m580 |[0m </div>
+  [90m    |[0m       [31m[1m^[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+ GET /scanner 500 in 7ms (next.js: 3ms, application-code: 4ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+⨯ ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  [90m578 |[0m
+  [90m579 |[0m
+[31m[1m>[0m [90m580 |[0m </div>
+  [90m    |[0m       [31m[1m^[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+ GET /scanner 500 in 16ms (next.js: 8ms, application-code: 8ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+ GET /dashboard 500 in 10ms (next.js: 5ms, application-code: 5ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+ GET /dashboard 500 in 10ms (next.js: 5ms, application-code: 5ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+ GET /dashboard 500 in 15ms (next.js: 6ms, application-code: 9ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:580:7
+Error: Expected '</', got '<eof>'
+  578 |
+  579 |
+> 580 | </div>
+      |       ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:577:2
+Error: Expected '</', got '<eof>'
+  575 |
+  576 |
+> 577 |  
+      |  ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:574:1
+Error: Expected '</', got '<eof>'
+  572 |
+  573 |     }
+> 574 |
+      | ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:570:1
+Error: Expected '</', got '<eof>'
+  568 |
+  569 |        
+> 570 |
+      | ^
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+ GET /dashboard 500 in 11ms (next.js: 5ms, application-code: 6ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+ GET /dashboard 500 in 13ms (next.js: 7ms, application-code: 7ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+ GET /dashboard 500 in 11ms (next.js: 4ms, application-code: 7ms)
+[browser] Uncaught Error: ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component]
+
+
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
+[browser] ./components/ScanResult.tsx:571:8
+Error: Unterminated regexp literal
+  569 |                </div>
+  570 |
+> 571 |       </div>
+      |        ^^^^^
+  572 |
+  573 |
+  574 |     </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./components/ScanResult.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Client Component Browser]
+    ./app/scanner/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/ScanResult.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Client Component SSR]
+    ./app/scanner/page.tsx [Server Component] 
