@@ -1805,3 +1805,4 @@ Import traces:
  GET / 200 in 13ms (next.js: 1.4ms, application-code: 11ms)
 [browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
  GET /dashboard 200 in 26ms (next.js: 1.4ms, application-code: 25ms)
+  Turbopack has seen frequent file updates and is waiting for the filesystem to settle (0.5s elapsed so far; last modified: "\\\\?\\C:\\Users\\HP\\my-app\\node_modules\\next\\types").
