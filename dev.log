@@ -1781,3 +1781,27 @@ Import traces:
     ./components/ScanResult.tsx [Client Component SSR]
     ./app/scanner/page.tsx [Client Component SSR]
     ./app/scanner/page.tsx [Server Component] 
+✓ Compiled in 15ms
+ GET /dashboard 200 in 49ms (next.js: 6ms, application-code: 43ms)
+ GET /scanner 200 in 16ms (next.js: 2.0ms, application-code: 14ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ POST /api/scan 200 in 7.9s (next.js: 1.2ms, application-code: 7.9s)
+ GET / 200 in 15ms (next.js: 1.8ms, application-code: 13ms)
+ GET /dashboard 200 in 21ms (next.js: 3ms, application-code: 18ms)
+ GET /scanner 200 in 15ms (next.js: 1.3ms, application-code: 13ms)
+ GET / 200 in 15ms (next.js: 1.8ms, application-code: 13ms)
+ GET /dashboard 200 in 15ms (next.js: 1.4ms, application-code: 14ms)
+ GET /scanner 200 in 14ms (next.js: 1.3ms, application-code: 13ms)
+ GET /scanner 200 in 16ms (next.js: 1.2ms, application-code: 14ms)
+ GET / 200 in 13ms (next.js: 1.3ms, application-code: 12ms)
+ GET /dashboard 200 in 16ms (next.js: 1.2ms, application-code: 14ms)
+ GET / 200 in 14ms (next.js: 1.5ms, application-code: 13ms)
+ GET /dashboard 200 in 17ms (next.js: 1.7ms, application-code: 16ms)
+ GET /scanner 200 in 28ms (next.js: 1.5ms, application-code: 26ms)
+ POST /api/scan 200 in 7.9s (next.js: 3ms, application-code: 7.9s)
+ GET /history 404 in 34ms (next.js: 20ms, application-code: 15ms)
+ GET /history 404 in 51ms (next.js: 10ms, application-code: 41ms)
+ GET /scanner 200 in 19ms (next.js: 1.1ms, application-code: 18ms)
+ GET / 200 in 13ms (next.js: 1.4ms, application-code: 11ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /dashboard 200 in 26ms (next.js: 1.4ms, application-code: 25ms)
