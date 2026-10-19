@@ -6,21 +6,37 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "seed": "node --env-file=.env.local --import tsx scripts/seed.mts",
+    "smoke": "node --env-file=.env.local scripts/smoke-platform.mjs"
   },
   "dependencies": {
+    "@better-auth/api-key": "^1.7.11",
+    "@better-auth/drizzle-adapter": "^1.7.11",
+    "@better-auth/passkey": "^1.7.11",
+    "@supabase/supabase-js": "^2.118.0",
+    "better-auth": "^1.7.11",
+    "drizzle-orm": "^0.45.4",
     "next": "16.4.0",
+    "nodemailer": "^10.1.7",
+    "postgres": "^3.4.9",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
