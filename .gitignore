@@ -43,3 +43,7 @@ next-env.d.ts
 # local runtime logs
 /dev.log
 *.log
+
+# supabase cli local state
+supabase/.temp/
+!.env.example
