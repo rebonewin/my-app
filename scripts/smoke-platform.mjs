@@ -127,6 +127,7 @@ async function main() {
     ["/admin/users", "User management"],
     ["/settings", "Settings"],
     ["/settings/security", "Security settings"],
+    ["/profile", "Account details"],
   ]) {
     const page = await admin.call(path);
     check(
@@ -422,6 +423,14 @@ async function main() {
       (anonymousPage.headers.get("location") ?? "").includes("/sign-in") ||
       anonymousPage.text.includes("Sign in"),
     `HTTP ${anonymousPage.status} -> ${anonymousPage.headers.get("location") ?? "-"}`,
+  );
+
+  const anonymousProfile = await createClient().call("/profile");
+  check(
+    "profile page requires authentication",
+    anonymousProfile.status === 307 ||
+      (anonymousProfile.headers.get("location") ?? "").includes("/sign-in"),
+    `HTTP ${anonymousProfile.status} -> ${anonymousProfile.headers.get("location") ?? "-"}`,
   );
 
   const ownerBan = await createClient().call("/api/admin/users", {

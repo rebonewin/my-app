@@ -12,11 +12,11 @@
     "smoke": "node --env-file=.env.local scripts/smoke-platform.mjs"
   },
   "dependencies": {
-    "@better-auth/api-key": "^1.7.11",
-    "@better-auth/drizzle-adapter": "^1.7.11",
-    "@better-auth/passkey": "^1.7.11",
+    "@better-auth/api-key": "^1.7.12",
+    "@better-auth/drizzle-adapter": "^1.7.12",
+    "@better-auth/passkey": "^1.7.12",
     "@supabase/supabase-js": "^2.118.0",
-    "better-auth": "^1.7.11",
+    "better-auth": "^1.7.12",
     "drizzle-orm": "^0.45.4",
     "next": "16.4.0",
     "nodemailer": "^10.1.7",

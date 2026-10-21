@@ -14,6 +14,7 @@ const PROTECTED_PREFIXES = [
   "/scanner",
   "/reports",
   "/history",
+  "/profile",
   "/settings",
   "/security",
   "/sessions",

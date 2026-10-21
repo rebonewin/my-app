@@ -355,6 +355,12 @@ export function AppShell({
 
                 <div className="p-1.5">
                   <Link
+                    href="/profile"
+                    className="block rounded-lg px-3 py-2 text-xs text-slate-300 transition hover:bg-white/[0.06] hover:text-white"
+                  >
+                    Profile
+                  </Link>
+                  <Link
                     href="/settings"
                     className="block rounded-lg px-3 py-2 text-xs text-slate-300 transition hover:bg-white/[0.06] hover:text-white"
                   >
