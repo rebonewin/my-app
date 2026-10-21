@@ -308,3 +308,87 @@ export const LoaderIcon = (p: IconProps) => (
     <path d="M21 12a9 9 0 1 1-6.22-8.56" />
   </Icon>
 );
+
+export const SunIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+  </Icon>
+);
+
+export const MoonIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+  </Icon>
+);
+
+export const BellIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+  </Icon>
+);
+
+export const CommandIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3Z" />
+  </Icon>
+);
+
+export const PanelLeftIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 3v18" />
+  </Icon>
+);
+
+export const ServerIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="3" y="4" width="18" height="6" rx="2" />
+    <rect x="3" y="14" width="18" height="6" rx="2" />
+    <path d="M7 7h.01M7 17h.01M11 7h4M11 17h4" />
+  </Icon>
+);
+
+export const CertificateIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="9" r="5" />
+    <path d="m8.5 13.2-1.5 8 5-2.5 5 2.5-1.5-8" />
+    <path d="m10 9 1.4 1.4L14 7.8" />
+  </Icon>
+);
+
+export const BugIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m8 2 1.5 1.5M16 2l-1.5 1.5M9 9h6M12 9v9" />
+    <path d="M6 13H2M22 13h-4M6.5 17.5 4 20M17.5 17.5 20 20M6.5 8.5 4 6M17.5 8.5 20 6" />
+    <rect x="7" y="9" width="10" height="12" rx="5" />
+  </Icon>
+);
+
+export const TrendingUpIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m3 17 6-6 4 4 8-8" />
+    <path d="M15 7h6v6" />
+  </Icon>
+);
+
+export const TrendingDownIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m3 7 6 6 4-4 8 8" />
+    <path d="M15 17h6v-6" />
+  </Icon>
+);
+
+export const FilterIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 6h16M7 12h10M10 18h4" />
+  </Icon>
+);
+
+export const ExternalLinkIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M15 3h6v6M10 14 21 3" />
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+  </Icon>
+);

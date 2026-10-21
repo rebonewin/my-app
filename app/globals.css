@@ -93,3 +93,215 @@ a {
   text-decoration: none;
   color: inherit;
 }
+
+/* ==========================================================================
+   SOC theme
+   --------------------------------------------------------------------------
+   The SOC module ships its own semantic palette so dark/light can switch
+   without touching the existing authentication surface. The theme attribute
+   is applied to <html> by the SOC shell boot script.
+   ========================================================================== */
+
+@theme inline {
+  --color-soc-bg: var(--soc-bg);
+  --color-soc-bg-deep: var(--soc-bg-deep);
+  --color-soc-panel: var(--soc-panel);
+  --color-soc-elevated: var(--soc-elevated);
+  --color-soc-elevated-2: var(--soc-elevated-2);
+  --color-soc-hover: var(--soc-hover);
+  --color-soc-border: var(--soc-border);
+  --color-soc-border-strong: var(--soc-border-strong);
+  --color-soc-fg: var(--soc-fg);
+  --color-soc-muted: var(--soc-muted);
+  --color-soc-faint: var(--soc-faint);
+  --color-soc-accent: var(--soc-accent);
+  --color-soc-accent-contrast: var(--soc-accent-contrast);
+  --color-soc-accent-soft: var(--soc-accent-soft);
+  --color-soc-blue: var(--soc-blue);
+  --color-soc-low: var(--soc-low);
+  --color-soc-low-soft: var(--soc-low-soft);
+  --color-soc-success: var(--soc-success);
+  --color-soc-success-soft: var(--soc-success-soft);
+  --color-soc-violet: var(--soc-violet);
+  --color-soc-violet-soft: var(--soc-violet-soft);
+  --color-soc-critical: var(--soc-critical);
+  --color-soc-critical-soft: var(--soc-critical-soft);
+  --color-soc-high: var(--soc-high);
+  --color-soc-high-soft: var(--soc-high-soft);
+  --color-soc-medium: var(--soc-medium);
+  --color-soc-medium-soft: var(--soc-medium-soft);
+  --color-soc-info: var(--soc-info);
+  --color-soc-info-soft: var(--soc-info-soft);
+  --color-soc-sidebar: var(--soc-sidebar);
+}
+
+.soc-theme {
+  color-scheme: dark;
+
+  --soc-bg: #050816;
+  --soc-bg-deep: #03050f;
+  --soc-panel: rgba(255, 255, 255, 0.034);
+  --soc-elevated: rgba(255, 255, 255, 0.055);
+  --soc-elevated-2: #0a1020;
+  --soc-hover: rgba(255, 255, 255, 0.075);
+  --soc-border: rgba(255, 255, 255, 0.08);
+  --soc-border-strong: rgba(255, 255, 255, 0.16);
+  --soc-fg: #f8fafc;
+  --soc-muted: #94a3b8;
+  --soc-faint: #64748b;
+  --soc-accent: #22d3ee;
+  --soc-accent-contrast: #041018;
+  --soc-accent-soft: rgba(34, 211, 238, 0.12);
+  --soc-accent-glow: rgba(34, 211, 238, 0.45);
+  --soc-blue: #60a5fa;
+  --soc-low: #38bdf8;
+  --soc-low-soft: rgba(56, 189, 248, 0.13);
+  --soc-success: #34d399;
+  --soc-success-soft: rgba(52, 211, 153, 0.13);
+  --soc-violet: #a78bfa;
+  --soc-violet-soft: rgba(167, 139, 250, 0.13);
+  --soc-critical: #fb7185;
+  --soc-critical-soft: rgba(251, 113, 133, 0.13);
+  --soc-high: #fb923c;
+  --soc-high-soft: rgba(251, 146, 60, 0.13);
+  --soc-medium: #fbbf24;
+  --soc-medium-soft: rgba(251, 191, 36, 0.13);
+  --soc-info: #c4b5fd;
+  --soc-info-soft: rgba(196, 181, 253, 0.12);
+  --soc-sidebar: rgba(7, 11, 23, 0.9);
+  --soc-shadow: rgba(0, 0, 0, 0.9);
+  --soc-highlight: rgba(255, 255, 255, 0.045);
+  --soc-grid: rgba(148, 163, 184, 0.055);
+  --soc-glow: rgba(34, 211, 238, 0.11);
+  --soc-glow-2: rgba(139, 92, 246, 0.09);
+  --soc-track: rgba(255, 255, 255, 0.08);
+}
+
+html[data-soc-theme="light"] .soc-theme {
+  color-scheme: light;
+
+  --soc-bg: #f4f7fb;
+  --soc-bg-deep: #e9eef6;
+  --soc-panel: rgba(255, 255, 255, 0.82);
+  --soc-elevated: rgba(255, 255, 255, 0.96);
+  --soc-elevated-2: #ffffff;
+  --soc-hover: rgba(15, 23, 42, 0.055);
+  --soc-border: rgba(15, 23, 42, 0.1);
+  --soc-border-strong: rgba(15, 23, 42, 0.18);
+  --soc-fg: #0f172a;
+  --soc-muted: #475569;
+  --soc-faint: #64748b;
+  --soc-accent: #0891b2;
+  --soc-accent-contrast: #ffffff;
+  --soc-accent-soft: rgba(8, 145, 178, 0.1);
+  --soc-accent-glow: rgba(8, 145, 178, 0.28);
+  --soc-blue: #2563eb;
+  --soc-low: #0369a1;
+  --soc-low-soft: rgba(3, 105, 161, 0.1);
+  --soc-success: #047857;
+  --soc-success-soft: rgba(4, 120, 87, 0.1);
+  --soc-violet: #6d28d9;
+  --soc-violet-soft: rgba(109, 40, 217, 0.1);
+  --soc-critical: #be123c;
+  --soc-critical-soft: rgba(190, 18, 60, 0.09);
+  --soc-high: #c2410c;
+  --soc-high-soft: rgba(194, 65, 12, 0.09);
+  --soc-medium: #a16207;
+  --soc-medium-soft: rgba(161, 98, 7, 0.1);
+  --soc-info: #6d28d9;
+  --soc-info-soft: rgba(109, 40, 217, 0.08);
+  --soc-sidebar: rgba(255, 255, 255, 0.88);
+  --soc-shadow: rgba(15, 23, 42, 0.18);
+  --soc-highlight: rgba(255, 255, 255, 0.9);
+  --soc-grid: rgba(15, 23, 42, 0.045);
+  --soc-glow: rgba(8, 145, 178, 0.1);
+  --soc-glow-2: rgba(109, 40, 217, 0.07);
+  --soc-track: rgba(15, 23, 42, 0.09);
+}
+
+.soc-canvas {
+  background-color: var(--soc-bg);
+  background-image:
+    radial-gradient(900px 520px at 82% -8%, var(--soc-glow), transparent 62%),
+    radial-gradient(760px 420px at 2% 4%, var(--soc-glow-2), transparent 62%),
+    linear-gradient(var(--soc-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--soc-grid) 1px, transparent 1px);
+  background-size: auto, auto, 48px 48px, 48px 48px;
+}
+
+.soc-theme ::selection {
+  background: var(--soc-accent);
+  color: var(--soc-accent-contrast);
+}
+
+.soc-theme ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.soc-theme ::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--soc-accent) 45%, transparent);
+  border-radius: 999px;
+}
+
+.soc-theme ::-webkit-scrollbar-thumb:hover {
+  background: var(--soc-accent);
+}
+
+@keyframes soc-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.82);
+  }
+}
+
+.soc-live-dot {
+  animation: soc-pulse 1.9s ease-in-out infinite;
+}
+
+@keyframes soc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.soc-rise {
+  animation: soc-rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes soc-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+.soc-sweep {
+  animation: soc-sweep 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .soc-theme *,
+  .soc-theme *::before,
+  .soc-theme *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
