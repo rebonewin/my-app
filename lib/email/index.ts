@@ -263,6 +263,22 @@ export function verificationEmail(name: string, url: string): SendEmailInput["ht
   });
 }
 
+export function emailChangeEmail(
+  name: string,
+  newEmail: string,
+  url: string,
+): SendEmailInput["html"] {
+  return layout({
+    title: "Confirm your new email address",
+    preheader: "Approve the new email address for your 1Security account.",
+    body: `<p style="margin:0 0 14px;">Hi ${escapeHtml(name || "there")},</p>
+      <p style="margin:0 0 14px;">We received a request to change the email on your 1Security account to <strong style="color:#fff;">${escapeHtml(newEmail)}</strong>.</p>
+      ${button(url, "Confirm email change")}
+      ${fallbackLink(url)}
+      <p style="margin:22px 0 0;color:${BRAND.muted};font-size:12px;">The address only changes when this link is opened by a signed-in session. It expires in 1 hour. If you did not request it, ignore this email — your current address stays the same.</p>`,
+  });
+}
+
 export function magicLinkEmail(url: string, host: string): SendEmailInput["html"] {
   return layout({
     title: "Your sign-in link",

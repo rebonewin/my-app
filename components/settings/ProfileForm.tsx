@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth/client";
@@ -27,9 +27,11 @@ export interface ProfileUser {
 export function ProfileForm({
   user,
   emailConfigured,
+  emailChangeToken = null,
 }: {
   user: ProfileUser;
   emailConfigured: boolean;
+  emailChangeToken?: string | null;
 }) {
   const router = useRouter();
   const [name, setName] = useState(user.name);
@@ -38,6 +40,83 @@ export function ProfileForm({
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const [nextEmail, setNextEmail] = useState("");
+  const [changingEmail, setChangingEmail] = useState(false);
+  const [confirmingEmail, setConfirmingEmail] = useState(
+    Boolean(emailChangeToken),
+  );
+  const [emailMessage, setEmailMessage] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const confirmedToken = useRef(false);
+
+  // The emailed link lands back here with a one-time token. Consume it exactly
+  // once (StrictMode double-invokes effects in development) and strip it from
+  // the address bar so a refresh cannot replay it.
+  useEffect(() => {
+    if (!emailChangeToken || confirmedToken.current) return;
+    confirmedToken.current = true;
+
+    void (async () => {
+      setConfirmingEmail(true);
+      setEmailError(null);
+
+      const response = await fetch("/api/account/email", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: emailChangeToken }),
+      });
+      const data = (await response.json().catch(() => null)) as
+        | { email?: string; rotatedSessions?: number; error?: string }
+        | null;
+
+      setConfirmingEmail(false);
+
+      if (!response.ok) {
+        setEmailError(
+          data?.error ?? "Could not confirm the new email address.",
+        );
+      } else {
+        setEmailMessage(
+          `Email changed to ${data?.email ?? "your new address"}. Verify it from that inbox to finish.`,
+        );
+        router.refresh();
+      }
+
+      window.history.replaceState(null, "", "/settings");
+    })();
+  }, [emailChangeToken, router]);
+
+  async function requestEmailChange(event: React.FormEvent) {
+    event.preventDefault();
+    const target = nextEmail.trim().toLowerCase();
+    if (!target) return;
+
+    setChangingEmail(true);
+    setEmailError(null);
+    setEmailMessage(null);
+
+    const response = await fetch("/api/account/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: target }),
+    });
+    const data = (await response.json().catch(() => null)) as
+      | { ok?: boolean; email?: string; error?: string }
+      | null;
+
+    setChangingEmail(false);
+
+    if (!response.ok) {
+      setEmailError(data?.error ?? "Could not start the email change.");
+      return;
+    }
+
+    setNextEmail("");
+    setEmailMessage(
+      `Confirmation sent to ${data?.email ?? target}. Open the link from that inbox to finish.`,
+    );
+  }
 
   async function save(event: React.FormEvent) {
     event.preventDefault();
@@ -190,9 +269,52 @@ export function ProfileForm({
             {!emailConfigured ? (
               <p className="text-[11px] text-amber-300/80">
                 Outbound email is not configured. Set the SMTP environment
-                variables to enable verification and password recovery.
+                variables to enable verification, email changes and password
+                recovery.
               </p>
             ) : null}
+
+            <form
+              onSubmit={requestEmailChange}
+              className="space-y-3 border-t border-white/[0.06] pt-3"
+            >
+              <Field
+                label="Change email"
+                htmlFor="profile-email"
+                hint="We email a confirmation link to the new address. Other devices are signed out once it is confirmed."
+              >
+                <Input
+                  id="profile-email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="new@company.com"
+                  value={nextEmail}
+                  onChange={(event) => setNextEmail(event.target.value)}
+                  disabled={!emailConfigured || changingEmail}
+                  required
+                />
+              </Field>
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="secondary"
+                  loading={changingEmail}
+                  disabled={!emailConfigured}
+                >
+                  <MailIcon size={13} />
+                  Send confirmation
+                </Button>
+              </div>
+            </form>
+
+            {confirmingEmail ? (
+              <Alert tone="info">Confirming your new email address…</Alert>
+            ) : null}
+            {emailMessage ? (
+              <Alert tone="success">{emailMessage}</Alert>
+            ) : null}
+            {emailError ? <Alert tone="error">{emailError}</Alert> : null}
           </CardBody>
         </Card>
       </div>

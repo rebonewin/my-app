@@ -549,6 +549,8 @@ function PasskeysCard({
   const [name, setName] = useState("");
   const [adding, setAdding] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -578,6 +580,32 @@ function PasskeysCard({
     } finally {
       setAdding(false);
     }
+  }
+
+  async function rename(id: string) {
+    const next = renameValue.trim();
+    if (!next) return;
+
+    setBusyId(id);
+    setError(null);
+    setMessage(null);
+
+    const { error: renameError } = await authClient.passkey.updatePasskey({
+      id,
+      name: next,
+    });
+
+    setBusyId(null);
+
+    if (renameError) {
+      setError(renameError.message ?? "Could not rename the passkey.");
+      return;
+    }
+
+    setRenamingId(null);
+    setRenameValue("");
+    setMessage("Passkey renamed.");
+    onChanged();
   }
 
   async function remove(id: string) {
@@ -624,37 +652,85 @@ function PasskeysCard({
         ) : (
           <ul className="divide-y divide-white/[0.05] overflow-hidden rounded-xl border border-white/[0.06]">
             {passkeys.map((passkey) => (
-              <li
-                key={passkey.id}
-                className="flex items-center justify-between gap-3 px-3.5 py-2.5"
-              >
-                <div className="flex min-w-0 items-center gap-2.5">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-cyan-300">
-                    <FingerprintIcon size={14} />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate text-xs text-slate-200">
-                      {passkey.name ?? "Unnamed passkey"}
-                    </p>
-                    <p className="text-[10px] text-slate-600">
-                      {passkey.deviceType}
-                      {passkey.backedUp ? " · synced" : " · device-bound"}
-                      {passkey.createdAt
-                        ? ` · added ${formatDate(passkey.createdAt)}`
-                        : ""}
-                    </p>
+              <li key={passkey.id} className="px-3.5 py-2.5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-cyan-300">
+                      <FingerprintIcon size={14} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-xs text-slate-200">
+                        {passkey.name ?? "Unnamed passkey"}
+                      </p>
+                      <p className="text-[10px] text-slate-600">
+                        {passkey.deviceType}
+                        {passkey.backedUp ? " · synced" : " · device-bound"}
+                        {passkey.createdAt
+                          ? ` · added ${formatDate(passkey.createdAt)}`
+                          : ""}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      disabled={busyId !== null}
+                      onClick={() => {
+                        setRenamingId(passkey.id);
+                        setRenameValue(passkey.name ?? "");
+                        setError(null);
+                      }}
+                    >
+                      Rename
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      loading={busyId === passkey.id && renamingId !== passkey.id}
+                      disabled={busyId !== null}
+                      onClick={() => remove(passkey.id)}
+                      aria-label="Remove passkey"
+                    >
+                      <TrashIcon size={13} />
+                    </Button>
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  loading={busyId === passkey.id}
-                  disabled={busyId !== null}
-                  onClick={() => remove(passkey.id)}
-                  aria-label="Remove passkey"
-                >
-                  <TrashIcon size={13} />
-                </Button>
+                {renamingId === passkey.id ? (
+                  <form
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void rename(passkey.id);
+                    }}
+                    className="mt-2 flex flex-wrap items-end gap-2"
+                  >
+                    <Field label="New name" htmlFor={`rename-${passkey.id}`}>
+                      <Input
+                        id={`rename-${passkey.id}`}
+                        value={renameValue}
+                        onChange={(event) => setRenameValue(event.target.value)}
+                        placeholder="MacBook Touch ID"
+                        maxLength={60}
+                        className="w-52"
+                      />
+                    </Field>
+                    <Button type="submit" loading={busyId === passkey.id}>
+                      Save name
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={busyId !== null}
+                      onClick={() => {
+                        setRenamingId(null);
+                        setRenameValue("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </form>
+                ) : null}
               </li>
             ))}
           </ul>

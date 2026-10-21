@@ -45,8 +45,14 @@ import {
   isAccountLocked,
   registerFailedLogin,
 } from "@/lib/security/threat-detection";
-import { loginAttempt, loginHistory, member, user as userTable } from "@/lib/db/schema";
-import { and, eq } from "drizzle-orm";
+import {
+  loginAttempt,
+  loginHistory,
+  member,
+  session as sessionTable,
+  user as userTable,
+} from "@/lib/db/schema";
+import { and, eq, ne } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import { resolveSessionFromHeaders } from "@/lib/auth/session-lookup";
 
@@ -204,17 +210,10 @@ export function clientIpFromHeaders(headers: Headers): string | null {
 /*                                   Auth                                     */
 /* -------------------------------------------------------------------------- */
 
-const secret = process.env.BETTER_AUTH_SECRET;
-
-if (!secret) {
-  throw new Error(
-    "BETTER_AUTH_SECRET is required. Generate one with: openssl rand -base64 32",
-  );
-}
-
-export const auth = betterAuth({
-  appName: "1Security",
-  secret,
+function createAuth(secret: string) {
+  return betterAuth({
+    appName: "1Security",
+    secret,
   baseURL: baseUrl(),
 
   database: drizzleAdapter(db, {
@@ -228,8 +227,10 @@ export const auth = betterAuth({
     // 7 days absolute, refreshed on activity (Remember Me extends to 30d).
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24,
-    // Signed cookie cache avoids a DB round-trip on every request while
-    // still expiring quickly enough to pick up revocation.
+    // Signed cookie cache keeps client-side session reads cheap. Server-side
+    // authorization never trusts it: `getAuthContext` passes
+    // `disableCookieCache` so revocation (sign-out elsewhere, admin
+    // force-logout, password rotation) is visible on the very next request.
     cookieCache: {
       enabled: true,
       maxAge: 60 * 5,
@@ -843,6 +844,28 @@ export const auth = betterAuth({
 
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
+      // Audit sign-out while the session is still resolvable. The `after` hook
+      // runs after the row is deleted, so the actor would already be gone.
+      if (ctx.path === "/sign-out") {
+        // `ctx.context.session` is not populated in before hooks, so resolve
+        // the actor straight from the session cookie while the row still
+        // exists.
+        const lookup = await resolveSessionFromHeaders(ctx.headers);
+        if (lookup) {
+          await recordAudit({
+            action: "auth.logout",
+            category: "auth",
+            severity: "info",
+            actorId: lookup.userId,
+            actorEmail: lookup.email,
+            description: "Signed out.",
+            ipAddress: clientIpFromHeaders(ctx.headers ?? new Headers()),
+            userAgent: ctx.headers?.get("user-agent") ?? null,
+          }).catch(() => undefined);
+        }
+        return;
+      }
+
       // Role gate for non-self-service Better Auth endpoints.
       const requiredPermission = AUTH_ENDPOINT_PERMISSIONS[ctx.path];
       if (requiredPermission) {
@@ -1119,21 +1142,48 @@ export const auth = betterAuth({
 
       if (ctx.path === "/change-password") {
         const session = ctx.context.session;
+        const userId = session?.user.id ?? "";
+
         await db
           .update(userTable)
           .set({ passwordChangedAt: new Date(), mustChangePassword: false })
-          .where(eq(userTable.id, session?.user.id ?? ""))
+          .where(eq(userTable.id, userId))
           .catch(() => undefined);
+
+        // Session rotation: every other credential is invalidated the moment the
+        // password changes, so a stolen session cannot outlive the reset. The
+        // current session stays valid so the user is not signed out mid-flow.
+        let rotatedSessions = 0;
+        if (userId) {
+          try {
+            const removed = await db
+              .delete(sessionTable)
+              .where(
+                and(
+                  eq(sessionTable.userId, userId),
+                  ne(sessionTable.id, session?.session.id ?? ""),
+                ),
+              )
+              .returning({ id: sessionTable.id });
+            rotatedSessions = removed.length;
+          } catch {
+            rotatedSessions = 0;
+          }
+        }
 
         await recordAudit({
           action: "auth.password_changed",
           category: "auth",
           severity: "high",
-          actorId: session?.user.id ?? null,
+          actorId: userId || null,
           actorEmail: session?.user.email ?? null,
-          description: "Password changed from account settings.",
+          description:
+            rotatedSessions > 0
+              ? `Password changed; ${rotatedSessions} other session${rotatedSessions === 1 ? "" : "s"} revoked.`
+              : "Password changed from account settings.",
           ipAddress: ip,
           userAgent,
+          metadata: { rotatedSessions },
         });
         return;
       }
@@ -1258,6 +1308,67 @@ export const auth = betterAuth({
         });
       }
     }),
+  },
+  });
+}
+
+let _auth: ReturnType<typeof createAuth> | undefined;
+
+function getAuth(): ReturnType<typeof createAuth> {
+  if (_auth) return _auth;
+
+  const secret =
+    process.env.BETTER_AUTH_SECRET ??
+    // Static/PPR shells (e.g. the platform layout's `requireAuth`) invoke auth
+    // during the production build. Build a throwaway instance with a
+    // placeholder secret so those shells render and the routes are marked
+    // dynamic; it never sees a real session. At runtime a missing secret still
+    // fails loudly.
+    (process.env.NEXT_PHASE === "phase-production-build"
+      ? "3f8a1c9e7b2d4f60a5c8e1b3d7f902468ace1357bdf024689ce1357bdf02468a"
+      : undefined);
+
+  if (!secret) {
+    throw new Error(
+      "BETTER_AUTH_SECRET is required. Generate one with: openssl rand -base64 32",
+    );
+  }
+
+  _auth = createAuth(secret);
+  return _auth;
+}
+
+/**
+ * Lazy proxy over the Better Auth instance. Environment-dependent construction
+ * is deferred to first access so importing `@/lib/auth` — which the production
+ * build does for every route and static page — never requires
+ * `BETTER_AUTH_SECRET` to be present at build time.
+ *
+ * The proxy target is a plain object, not a function: Better Auth's instance is
+ * not callable, and a callable proxy is mistaken for a config factory by the
+ * official CLI (`c12` invokes function exports).
+ */
+export const auth = new Proxy({} as ReturnType<typeof createAuth>, {
+  get(_target, property) {
+    const real = getAuth() as unknown as Record<PropertyKey, unknown>;
+    const value = real[property];
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+  has(_target, property) {
+    return property in getAuth();
+  },
+  // The official CLI merges the exported config with `defu`, which copies
+  // enumerable own keys. Forward them so the merged object still carries
+  // `options` and `$context` instead of collapsing to an empty object.
+  ownKeys() {
+    return Reflect.ownKeys(getAuth() as object);
+  },
+  getOwnPropertyDescriptor(_target, property) {
+    const descriptor = Reflect.getOwnPropertyDescriptor(
+      getAuth() as object,
+      property,
+    );
+    return descriptor ? { ...descriptor, configurable: true } : undefined;
   },
 });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -373,37 +374,47 @@ export function AdminUsersPanel({
                           {formatDate(row.createdAt)}
                         </td>
                         <td className="px-5 py-3 text-right">
-                          {self ? (
-                            <span className="text-[10px] text-slate-600">—</span>
-                          ) : canBan ? (
-                            row.banned ? (
-                              <Button
-                                size="sm"
-                                variant="secondary"
-                                loading={busyId === row.id}
-                                disabled={busyId !== null}
-                                onClick={() => unban(row)}
-                              >
-                                <CheckIcon size={13} />
-                                Unban
-                              </Button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            <Link
+                              href={`/admin/users/${row.id}`}
+                              className="inline-flex h-7 items-center rounded-md border border-white/10 px-2 text-[10px] text-slate-300 transition hover:border-white/25 hover:text-white"
+                            >
+                              View
+                            </Link>
+                            {self ? (
+                              <span className="text-[10px] text-slate-600">
+                                —
+                              </span>
+                            ) : canBan ? (
+                              row.banned ? (
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  loading={busyId === row.id}
+                                  disabled={busyId !== null}
+                                  onClick={() => unban(row)}
+                                >
+                                  <CheckIcon size={13} />
+                                  Unban
+                                </Button>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant="danger"
+                                  loading={busyId === row.id}
+                                  disabled={busyId !== null}
+                                  onClick={() => ban(row)}
+                                >
+                                  <BanIcon size={13} />
+                                  Ban
+                                </Button>
+                              )
                             ) : (
-                              <Button
-                                size="sm"
-                                variant="danger"
-                                loading={busyId === row.id}
-                                disabled={busyId !== null}
-                                onClick={() => ban(row)}
-                              >
-                                <BanIcon size={13} />
-                                Ban
-                              </Button>
-                            )
-                          ) : (
-                            <span className="text-[10px] text-slate-600">
-                              <ShieldIcon size={11} />
-                            </span>
-                          )}
+                              <span className="text-[10px] text-slate-600">
+                                <ShieldIcon size={11} />
+                              </span>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );

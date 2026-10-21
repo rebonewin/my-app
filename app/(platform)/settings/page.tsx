@@ -14,8 +14,13 @@ export const metadata = {
   title: "Settings · 1Security",
 };
 
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ emailChangeToken?: string }>;
+}) {
   const context = await requirePermission("settings:read", { next: "/settings" });
+  const params = await searchParams;
 
   const [row] = await db
     .select()
@@ -43,7 +48,11 @@ export default async function SettingsPage() {
         title="Settings"
         description="Your identity as it appears across the platform, plus the security controls that protect it."
       />
-      <ProfileForm user={profile} emailConfigured={isEmailConfigured()} />
+      <ProfileForm
+        user={profile}
+        emailConfigured={isEmailConfigured()}
+        emailChangeToken={params.emailChangeToken ?? null}
+      />
     </div>
   );
 }

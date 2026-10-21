@@ -37,7 +37,12 @@ export interface AuthContext {
  * Returns null when unauthenticated — never throws.
  */
 export const getAuthContext = cache(async (): Promise<AuthContext | null> => {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await auth.api.getSession({
+    headers: await headers(),
+    // Authorization must observe the current row, never a cached payload: a
+    // revoked session would otherwise stay usable until the cache TTL.
+    query: { disableCookieCache: true },
+  });
   if (!session) return null;
 
   const activeOrganizationId = session.session.activeOrganizationId ?? null;

@@ -57,14 +57,37 @@ function createClient() {
       headers["content-type"] = "application/json";
     }
 
-    const response = await fetch(base + path, {
-      ...init,
-      headers,
-      redirect: "manual",
-    });
+    const method = (init.method ?? "GET").toUpperCase();
+    // Reads are safe to retry once; mutations are not (a request that timed
+    // out may already have been applied). Bounded timeouts keep a transient
+    // network stall from aborting the whole run.
+    const attempts = method === "GET" ? 2 : 1;
+    let response = null;
+    let text = "";
+    let lastError = null;
 
-    capture(response);
-    const text = await response.text();
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      try {
+        response = await fetch(base + path, {
+          ...init,
+          headers,
+          redirect: "manual",
+          signal: AbortSignal.timeout(method === "GET" ? 45_000 : 120_000),
+        });
+        capture(response);
+        text = await response.text();
+        lastError = null;
+        break;
+      } catch (error) {
+        lastError = error;
+        if (attempt + 1 < attempts) {
+          await new Promise((resolve) => setTimeout(resolve, 2_000));
+        }
+      }
+    }
+
+    if (!response || lastError) throw lastError ?? new Error("request failed");
+
     let json = null;
     try {
       json = JSON.parse(text);
@@ -296,6 +319,19 @@ async function main() {
     `${Array.isArray(passkeys.json) ? passkeys.json.length : "?"} passkeys`,
   );
 
+  const anonRename = await createClient().call(
+    "/api/auth/passkey/update-passkey",
+    {
+      method: "POST",
+      body: JSON.stringify({ id: "smoke-nonexistent", name: "renamed" }),
+    },
+  );
+  check(
+    "passkey rename endpoint requires a session",
+    anonRename.status === 401,
+    `HTTP ${anonRename.status}`,
+  );
+
   if (totp.status === 200) {
     const disabled = await admin.call("/api/auth/two-factor/disable", {
       method: "POST",
@@ -305,7 +341,7 @@ async function main() {
   }
 
   /* --------------------------- customer boundaries ------------------------- */
-  const email = `smoke+${Date.now()}@1security.test`;
+  let email = `smoke+${Date.now()}@1security.test`;
   const password = "Sm0ke-Customer-Passw0rd!2026";
   const signUp = await customer.call("/api/auth/sign-up/email", {
     method: "POST",
@@ -315,6 +351,81 @@ async function main() {
     "customer signs up",
     signUp.status === 200 && signUp.json?.user?.role === "customer",
     `role=${signUp.json?.user?.role ?? "?"}`,
+  );
+
+  const customerId = signUp.json?.user?.id ?? "";
+
+  /* --------------------------- per-user admin view ------------------------- */
+  const profileView = await admin.call(
+    `/api/admin/users/${customerId}?scope=profile`,
+  );
+  check(
+    "admin reads per-user profile",
+    profileView.status === 200 &&
+      profileView.json?.user?.email === email &&
+      profileView.json?.user?.role === "customer" &&
+      profileView.json?.canForceLogout === true,
+    `HTTP ${profileView.status}`,
+  );
+
+  const sessionsView = await admin.call(
+    `/api/admin/users/${customerId}?scope=sessions`,
+  );
+  check(
+    "admin reads per-user sessions",
+    sessionsView.status === 200 &&
+      (sessionsView.json?.sessions?.length ?? 0) >= 1,
+    `${sessionsView.json?.sessions?.length ?? 0} sessions`,
+  );
+
+  const auditView = await admin.call(
+    `/api/admin/users/${customerId}?scope=audit`,
+  );
+  check(
+    "admin reads per-user audit history",
+    auditView.status === 200 &&
+      (auditView.json?.audit ?? []).some((row) => row.action === "auth.signup"),
+    `${auditView.json?.audit?.length ?? 0} events`,
+  );
+
+  const customerProfileView = await customer.call(
+    `/api/admin/users/${customerId}?scope=profile`,
+  );
+  check(
+    "customer blocked from per-user admin view",
+    customerProfileView.status === 403,
+    `HTTP ${customerProfileView.status}`,
+  );
+
+  /* ------------------------------ email change ---------------------------- */
+  const sameEmail = await customer.call("/api/account/email", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+  check(
+    "email change rejects the current address",
+    sameEmail.status === 400,
+    `HTTP ${sameEmail.status}`,
+  );
+
+  const badEmail = await customer.call("/api/account/email", {
+    method: "POST",
+    body: JSON.stringify({ email: "not-an-address" }),
+  });
+  check(
+    "email change validates the new address",
+    badEmail.status === 400,
+    `HTTP ${badEmail.status}`,
+  );
+
+  const anonEmail = await createClient().call("/api/account/email", {
+    method: "POST",
+    body: JSON.stringify({ email: "someone@1security.test" }),
+  });
+  check(
+    "email change requires authentication",
+    anonEmail.status === 401,
+    `HTTP ${anonEmail.status}`,
   );
 
   const customerAdmin = await customer.call("/api/admin/users");
@@ -507,6 +618,71 @@ async function main() {
     });
   }
 
+  /* ------------------------------ email change ---------------------------- */
+  // End-to-end confirmation without sending mail: seed the same verification
+  // row the POST handler writes, then consume it through the API. Runs after
+  // the tenant-scoping checks because the address change legitimately rewrites
+  // the actor email on later audit rows.
+  const updatedEmail = `smoke+changed-${Date.now()}@1security.test`;
+  const dbUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
+  if (dbUrl) {
+    const sql = postgres(dbUrl, { prepare: false, max: 1 });
+    try {
+      const { createHash, randomBytes, randomUUID } = await import(
+        "node:crypto"
+      );
+      const token = randomBytes(32).toString("base64url");
+      const hash = createHash("sha256").update(token).digest("hex");
+
+      await sql`
+        insert into verification (id, identifier, value, expires_at)
+        values (
+          ${randomUUID()},
+          ${`change-email:${customerId}`},
+          ${`${hash}:${updatedEmail}`},
+          ${new Date(Date.now() + 3_600_000)}
+        )
+      `;
+
+      const confirm = await customer.call("/api/account/email", {
+        method: "PUT",
+        body: JSON.stringify({ token }),
+      });
+      check(
+        "email change consumes a valid token",
+        confirm.status === 200,
+        `HTTP ${confirm.status}`,
+      );
+
+      const changedProfile = await admin.call(
+        `/api/admin/users/${customerId}?scope=profile`,
+      );
+      check(
+        "email change persists and resets verification",
+        changedProfile.json?.user?.email === updatedEmail &&
+          changedProfile.json?.user?.emailVerified === false,
+        `${changedProfile.json?.user?.email ?? "?"} verified=${changedProfile.json?.user?.emailVerified ?? "?"}`,
+      );
+
+      const changedAudit = await admin.call(
+        `/api/admin/users/${customerId}?scope=audit`,
+      );
+      check(
+        "email change is recorded in the audit trail",
+        (changedAudit.json?.audit ?? []).some(
+          (row) => row.action === "auth.email_changed",
+        ),
+        `${changedAudit.json?.audit?.length ?? 0} events`,
+      );
+
+      // Keep the disposable account usable for the remaining sign-in checks.
+      await sql`update "user" set email_verified = true where id = ${customerId}`;
+      email = updatedEmail;
+    } finally {
+      await sql.end();
+    }
+  }
+
   /* ------------------------------- sign-out ------------------------------- */
   const signOut = await customer.call("/api/auth/sign-out", {
     method: "POST",
@@ -519,6 +695,69 @@ async function main() {
     "session cleared after sign-out",
     afterSignOut.json === null || afterSignOut.json === undefined,
     `HTTP ${afterSignOut.status}`,
+  );
+
+  /* -------------------------- logout + force logout ------------------------ */
+  const logoutAudit = await admin.call(
+    `/api/admin/users/${customerId}?scope=audit`,
+  );
+  check(
+    "logout is recorded in the audit trail",
+    logoutAudit.status === 200 &&
+      (logoutAudit.json?.audit ?? []).some(
+        (row) => row.action === "auth.logout",
+      ),
+    `${logoutAudit.json?.audit?.length ?? 0} events`,
+  );
+
+  // A second live session proves force-logout actually revokes credentials.
+  const customerTwo = createClient();
+  const signInAgain = await customerTwo.call("/api/auth/sign-in/email", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  check(
+    "customer signs in on a second device",
+    signInAgain.status === 200,
+    `HTTP ${signInAgain.status}`,
+  );
+
+  const customerForceLogout = await customerTwo.call(
+    `/api/admin/users/${customerId}`,
+    { method: "DELETE" },
+  );
+  check(
+    "customer cannot force-logout an account",
+    customerForceLogout.status === 403,
+    `HTTP ${customerForceLogout.status}`,
+  );
+
+  const forceLogout = await admin.call(`/api/admin/users/${customerId}`, {
+    method: "DELETE",
+  });
+  check(
+    "admin force-logout revokes sessions",
+    forceLogout.status === 200 && (forceLogout.json?.sessionsRevoked ?? 0) >= 1,
+    `HTTP ${forceLogout.status} revoked=${forceLogout.json?.sessionsRevoked ?? 0}`,
+  );
+
+  const afterForceLogout = await customerTwo.call("/api/devices");
+  check(
+    "force-logout clears the target session",
+    afterForceLogout.status === 401,
+    `HTTP ${afterForceLogout.status}`,
+  );
+
+  const forceAudit = await admin.call(
+    `/api/admin/users/${customerId}?scope=audit`,
+  );
+  check(
+    "force-logout is recorded in the audit trail",
+    forceAudit.status === 200 &&
+      (forceAudit.json?.audit ?? []).some(
+        (row) => row.action === "user.force_logout",
+      ),
+    `${forceAudit.json?.audit?.length ?? 0} events`,
   );
 
   const adminSignOut = await admin.call("/api/auth/sign-out", {
