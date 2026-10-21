@@ -19,6 +19,11 @@ import postgres from "postgres";
 
 const base = (process.env.SMOKE_BASE ?? "http://localhost:3000").replace(/\/$/, "");
 
+// Each run presents a fresh test-net address. The platform's credential-
+// stuffing rule blocks an IP after 5 distinct accounts in 30 minutes, which is
+// correct in production but would make repeated CI runs trip their own defence.
+const smokeIp = `203.0.113.${Math.floor(Math.random() * 250) + 1}`;
+
 const results = [];
 let failures = 0;
 
@@ -50,7 +55,11 @@ function createClient() {
   }
 
   async function call(path, init = {}) {
-    const headers = { origin: base, ...(init.headers ?? {}) };
+    const headers = {
+      origin: base,
+      "x-forwarded-for": smokeIp,
+      ...(init.headers ?? {}),
+    };
     const cookie = cookieHeader();
     if (cookie) headers.cookie = cookie;
     if (init.body && !headers["content-type"] && typeof init.body === "string") {

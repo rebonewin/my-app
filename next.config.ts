@@ -11,7 +11,11 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   partialPrefetching: true,
+  // Pin the workspace root to this repository. Without it Next walks up to the
+  // parent directory, finds an unrelated lockfile and emits a workspace warning.
+  outputFileTracingRoot: process.cwd(),
   turbopack: {
+    root: process.cwd(),
     rules: {
       "*.css": {
         loaders: ["@tailwindcss/turbopack"],
