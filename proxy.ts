@@ -83,6 +83,7 @@ function contentSecurityPolicy(upgradeInsecureRequests: boolean): string {
 function hardenResponse(
   response: NextResponse,
   upgradeInsecureRequests: boolean,
+  origin: string,
 ): NextResponse {
   response.headers.set(
     "Content-Security-Policy",
@@ -91,6 +92,9 @@ function hardenResponse(
   // Every document is session-dependent or is an authentication screen. Do
   // not let browsers or intermediary caches retain it.
   response.headers.set("Cache-Control", "no-store, max-age=0");
+  // HTML is same-origin content. Do not inherit a wildcard CORS header that
+  // would make authenticated documents readable by arbitrary origins.
+  response.headers.set("Access-Control-Allow-Origin", origin);
   return response;
 }
 
@@ -108,23 +112,32 @@ export function proxy(request: NextRequest) {
   // Two-factor challenge must be reachable both signed-in (mid-challenge) and
   // signed-out (after the challenge expires).
   if (pathname === "/two-factor") {
-    return hardenResponse(NextResponse.next(), secure);
+    return hardenResponse(NextResponse.next(), secure, request.nextUrl.origin);
   }
 
   if (isProtected && !sessionCookie) {
     const url = new URL("/sign-in", request.url);
     url.searchParams.set("next", pathname);
-    return hardenResponse(NextResponse.redirect(url), secure);
+    return hardenResponse(
+      NextResponse.redirect(url),
+      secure,
+      request.nextUrl.origin,
+    );
   }
 
   if (sessionCookie && AUTH_PAGES.includes(pathname)) {
     return hardenResponse(
       NextResponse.redirect(new URL("/dashboard", request.url)),
       secure,
+      request.nextUrl.origin,
     );
   }
 
-  return hardenResponse(NextResponse.next(), secure);
+  return hardenResponse(
+    NextResponse.next(),
+    secure,
+    request.nextUrl.origin,
+  );
 }
 
 export const config = {
