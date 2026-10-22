@@ -46,8 +46,57 @@ const AUTH_PAGES = [
   "/two-factor",
 ];
 
+/**
+ * Document CSP for every HTML response.
+ *
+ * Next.js 16 renders these routes with Cache Components/PPR. A per-request
+ * nonce cannot be embedded in the prerendered static shell, and the Next.js
+ * documentation explicitly lists PPR as incompatible with nonce-based CSP.
+ * Using a nonce-only policy would therefore block the framework bootstrap
+ * scripts on the static shell. `'unsafe-inline'` is required for those inline
+ * scripts, but the policy still locks down sources, framing, forms, plugins and
+ * transport. Inline style attributes (charts, progress bars and the SOC theme)
+ * also require `'unsafe-inline'` for styles.
+ */
+const isDev = process.env.NODE_ENV === "development";
+
+function contentSecurityPolicy(upgradeInsecureRequests: boolean): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self' data:",
+    "connect-src 'self'",
+    "media-src 'self' blob:",
+    "worker-src 'self' blob:",
+    "manifest-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-src 'none'",
+    "frame-ancestors 'none'",
+    ...(upgradeInsecureRequests ? ["upgrade-insecure-requests"] : []),
+  ].join("; ");
+}
+
+function hardenResponse(
+  response: NextResponse,
+  upgradeInsecureRequests: boolean,
+): NextResponse {
+  response.headers.set(
+    "Content-Security-Policy",
+    contentSecurityPolicy(upgradeInsecureRequests),
+  );
+  // Every document is session-dependent or is an authentication screen. Do
+  // not let browsers or intermediary caches retain it.
+  response.headers.set("Cache-Control", "no-store, max-age=0");
+  return response;
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const secure = request.nextUrl.protocol === "https:";
   const sessionCookie = getSessionCookie(request, {
     cookiePrefix: "1security",
   });
@@ -58,26 +107,34 @@ export function proxy(request: NextRequest) {
 
   // Two-factor challenge must be reachable both signed-in (mid-challenge) and
   // signed-out (after the challenge expires).
-  if (pathname === "/two-factor") return NextResponse.next();
+  if (pathname === "/two-factor") {
+    return hardenResponse(NextResponse.next(), secure);
+  }
 
   if (isProtected && !sessionCookie) {
     const url = new URL("/sign-in", request.url);
     url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+    return hardenResponse(NextResponse.redirect(url), secure);
   }
 
   if (sessionCookie && AUTH_PAGES.includes(pathname)) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return hardenResponse(
+      NextResponse.redirect(new URL("/dashboard", request.url)),
+      secure,
+    );
   }
 
-  return NextResponse.next();
+  return hardenResponse(NextResponse.next(), secure);
 }
 
 export const config = {
   matcher: [
     /*
-     * Skip static assets, image optimization and the auth API itself.
+     * Skip API routes, static assets and image optimization. The API has its
+     * own JSON-appropriate headers and auth guards; CSP only applies to HTML.
+     * Prefetches are intentionally still matched so the optimistic auth gate
+     * behaves the same for navigations and prefetches.
      */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|woff2?|ttf|otf)$).*)",
   ],
 };
