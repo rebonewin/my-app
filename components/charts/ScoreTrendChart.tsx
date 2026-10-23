@@ -43,6 +43,15 @@ export function ScoreTrendChart({ data }: { data: TrendPoint[] }) {
   const activeX = activeIndex === null ? 0 : xFor(activeIndex);
   const activeY = active ? yFor(active.score) : 0;
   const showEvery = Math.max(1, Math.ceil(data.length / 7));
+  const labelIndexes = new Set<number>();
+  let lastVisibleLabel: string | null = null;
+
+  data.forEach((point, index) => {
+    const sampled = index % showEvery === 0 || index === data.length - 1;
+    if (!sampled || point.label === lastVisibleLabel) return;
+    labelIndexes.add(index);
+    lastVisibleLabel = point.label;
+  });
 
   return (
     <div>
@@ -140,9 +149,7 @@ export function ScoreTrendChart({ data }: { data: TrendPoint[] }) {
 
       <div className="relative ml-9 mr-2 mt-2 h-4">
         {data.map((point, index) => {
-          if (index % showEvery !== 0 && index !== data.length - 1) {
-            return null;
-          }
+          if (!labelIndexes.has(index)) return null;
           const alignment =
             index === 0
               ? "translate-x-0 text-left"

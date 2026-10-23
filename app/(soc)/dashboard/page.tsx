@@ -3,12 +3,15 @@ import type { Metadata } from "next";
 import { LazyDashboardCharts } from "@/components/charts/LazyDashboardCharts";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { LiveRefresh } from "@/components/dashboard/LiveRefresh";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { RecentFindings } from "@/components/dashboard/RecentFindings";
+import { RecentScans } from "@/components/dashboard/RecentScans";
 import { RiskOverview } from "@/components/dashboard/RiskOverview";
 import { ThreatLevelCard } from "@/components/dashboard/ThreatLevelCard";
 import { WidgetRenderer } from "@/components/widgets/WidgetRenderer";
 import { requirePermission } from "@/lib/auth/server";
+import { tenantScope } from "@/lib/tenancy";
 import { getDashboardSnapshot } from "@/services/dashboard";
 import { cn } from "@/lib/utils";
 
@@ -24,11 +27,12 @@ export default async function DashboardPage() {
   const context = await requirePermission("dashboard:read", {
     next: "/dashboard",
   });
-  const snapshot = await getDashboardSnapshot();
+  const snapshot = await getDashboardSnapshot(tenantScope(context));
   const firstName = context.user.name.trim().split(/\s+/)[0] || "analyst";
 
   return (
     <div className="space-y-5 sm:space-y-6">
+      <LiveRefresh seconds={20} />
       <DashboardHeader firstName={firstName} snapshot={snapshot} />
 
       <QuickActions actions={snapshot.quickActions} />
@@ -59,6 +63,7 @@ export default async function DashboardPage() {
         <div className="min-w-0 space-y-4">
           <LazyDashboardCharts data={snapshot.charts} />
           <RecentFindings findings={snapshot.recentFindings} />
+          <RecentScans scans={snapshot.recentScans} />
         </div>
 
         <aside className="hidden min-w-0 xl:block" aria-label="Live activity">

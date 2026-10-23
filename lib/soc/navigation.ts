@@ -57,6 +57,13 @@ export const SOC_NAV_SECTIONS: SocNavSection[] = [
         match: ["/scanner", "/vapt"],
       },
       {
+        href: "/scans",
+        label: "Scan Queue",
+        description: "Queued, running and historical assessments",
+        icon: "radar",
+        match: ["/scans"],
+      },
+      {
         href: "/ssl-analyzer",
         label: "SSL Analyzer",
         description: "Certificate chains, expiry and protocol health",

@@ -1,6 +1,7 @@
 import {
   bigint,
   boolean,
+  doublePrecision,
   index,
   integer,
   jsonb,
@@ -616,6 +617,102 @@ export const ipIntel = pgTable(
   },
 );
 
+/* -------------------------------------------------------------------------- */
+/*                       Asset inventory & scan orchestration                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Security assets owned by a user or an organization.
+ *
+ * `userId` is always the creator/owner for personal workspaces. When
+ * `organizationId` is set the asset is tenant-scoped and visible to the active
+ * organization. `lastScanId` intentionally has no foreign key: scans retain
+ * their history if an asset is removed, and the relation is maintained by the
+ * scan service.
+ */
+export const asset = pgTable(
+  "asset",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    organizationId: text("organization_id").references(() => organization.id, {
+      onDelete: "set null",
+    }),
+    name: text("name").notNull(),
+    targetUrl: text("target_url").notNull(),
+    domain: text("domain").notNull(),
+    ipAddress: text("ip_address"),
+    type: varchar("type", { length: 32 }).default("website").notNull(),
+    environment: varchar("environment", { length: 24 })
+      .default("production")
+      .notNull(),
+    criticality: varchar("criticality", { length: 16 })
+      .default("medium")
+      .notNull(),
+    owner: text("owner"),
+    tags: jsonb("tags").$type<string[]>().default([]).notNull(),
+    description: text("description"),
+    status: varchar("status", { length: 16 }).default("active").notNull(),
+    riskScore: integer("risk_score").default(0).notNull(),
+    riskLevel: varchar("risk_level", { length: 16 })
+      .default("unknown")
+      .notNull(),
+    openFindings: integer("open_findings").default(0).notNull(),
+    lastScanAt: timestamp("last_scan_at", { withTimezone: true }),
+    lastScanId: text("last_scan_id"),
+    sslExpiresAt: timestamp("ssl_expires_at", { withTimezone: true }),
+    sslIssuer: text("ssl_issuer"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("asset_user_id_idx").on(table.userId),
+    index("asset_organization_id_idx").on(table.organizationId),
+    index("asset_status_idx").on(table.status),
+    index("asset_risk_idx").on(table.riskLevel),
+    index("asset_domain_idx").on(table.domain),
+    index("asset_last_scan_idx").on(table.lastScanAt),
+  ],
+);
+
+/**
+ * Custom scan profiles. The seven built-in profiles are code-level constants
+ * (see `services/scanner/profiles.ts`) so they can evolve with the scanner
+ * without a migration. Organizations can persist additional profiles here.
+ */
+export const scanProfile = pgTable(
+  "scan_profile",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
+    organizationId: text("organization_id").references(() => organization.id, {
+      onDelete: "cascade",
+    }),
+    name: text("name").notNull(),
+    description: text("description"),
+    modules: jsonb("modules").$type<string[]>().default([]).notNull(),
+    isSystem: boolean("is_system").default(false).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("scan_profile_user_idx").on(table.userId),
+    index("scan_profile_org_idx").on(table.organizationId),
+  ],
+);
+
 /**
  * Persisted assessment runs. The scanner previously returned results and threw
  * them away; storing them makes the dashboard, reports and history real rather
@@ -631,28 +728,162 @@ export const scan = pgTable(
     organizationId: text("organization_id").references(() => organization.id, {
       onDelete: "set null",
     }),
+    assetId: text("asset_id").references(() => asset.id, {
+      onDelete: "set null",
+    }),
+    profileId: text("profile_id"),
+    profileName: text("profile_name"),
+    profileModules: jsonb("profile_modules").$type<string[]>().default([]).notNull(),
     target: text("target").notNull(),
     hostname: text("hostname"),
     status: varchar("status", { length: 16 }).default("running").notNull(),
+    progress: integer("progress").default(0).notNull(),
+    currentModule: text("current_module"),
     riskLevel: varchar("risk_level", { length: 16 }).default("unknown"),
     riskScore: integer("risk_score").default(0).notNull(),
+    securityScore: integer("security_score").default(0).notNull(),
     findingCount: integer("finding_count").default(0).notNull(),
+    criticalCount: integer("critical_count").default(0).notNull(),
     highCount: integer("high_count").default(0).notNull(),
     mediumCount: integer("medium_count").default(0).notNull(),
     lowCount: integer("low_count").default(0).notNull(),
     results: jsonb("results"),
     durationMs: integer("duration_ms"),
     error: text("error"),
+    startedAt: timestamp("started_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
     completedAt: timestamp("completed_at", { withTimezone: true }),
+    cancelledAt: timestamp("cancelled_at", { withTimezone: true }),
   },
   (table) => [
     index("scan_user_id_idx").on(table.userId),
     index("scan_organization_id_idx").on(table.organizationId),
+    index("scan_asset_id_idx").on(table.assetId),
+    index("scan_profile_id_idx").on(table.profileId),
     index("scan_created_idx").on(table.createdAt),
     index("scan_status_idx").on(table.status),
+  ],
+);
+
+/**
+ * Normalized, persistent findings. One row represents an exposure on an asset,
+ * keyed by a stable fingerprint, so remediation status survives future scans.
+ * `scan_finding` snapshots which findings existed on each scan for comparison.
+ */
+export const finding = pgTable(
+  "finding",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    organizationId: text("organization_id").references(() => organization.id, {
+      onDelete: "set null",
+    }),
+    assetId: text("asset_id")
+      .notNull()
+      .references(() => asset.id, { onDelete: "cascade" }),
+    lastScanId: text("last_scan_id").references(() => scan.id, {
+      onDelete: "set null",
+    }),
+    fingerprint: text("fingerprint").notNull(),
+    title: text("title").notNull(),
+    description: text("description"),
+    severity: varchar("severity", { length: 16 }).default("medium").notNull(),
+    category: varchar("category", { length: 48 }).default("general").notNull(),
+    status: varchar("status", { length: 16 }).default("open").notNull(),
+    cvss: doublePrecision("cvss").default(0).notNull(),
+    evidence: jsonb("evidence"),
+    remediation: text("remediation"),
+    assignedTo: text("assigned_to"),
+    firstSeenAt: timestamp("first_seen_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("finding_asset_fingerprint_idx").on(
+      table.assetId,
+      table.fingerprint,
+    ),
+    index("finding_user_id_idx").on(table.userId),
+    index("finding_organization_id_idx").on(table.organizationId),
+    index("finding_scan_idx").on(table.lastScanId),
+    index("finding_severity_idx").on(table.severity),
+    index("finding_status_idx").on(table.status),
+    index("finding_last_seen_idx").on(table.lastSeenAt),
+  ],
+);
+
+/** Immutable per-scan finding snapshots used by scan comparison and trends. */
+export const scanFinding = pgTable(
+  "scan_finding",
+  {
+    id: text("id").primaryKey(),
+    scanId: text("scan_id")
+      .notNull()
+      .references(() => scan.id, { onDelete: "cascade" }),
+    findingId: text("finding_id").references(() => finding.id, {
+      onDelete: "set null",
+    }),
+    assetId: text("asset_id").references(() => asset.id, {
+      onDelete: "cascade",
+    }),
+    fingerprint: text("fingerprint").notNull(),
+    title: text("title").notNull(),
+    severity: varchar("severity", { length: 16 }).default("medium").notNull(),
+    category: varchar("category", { length: 48 }).default("general").notNull(),
+    cvss: doublePrecision("cvss").default(0).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    uniqueIndex("scan_finding_scan_fingerprint_idx").on(
+      table.scanId,
+      table.fingerprint,
+    ),
+    index("scan_finding_asset_idx").on(table.assetId),
+    index("scan_finding_finding_idx").on(table.findingId),
+  ],
+);
+
+/** Certificate observations per scan, enabling SSL expiry history. */
+export const sslSnapshot = pgTable(
+  "ssl_snapshot",
+  {
+    id: text("id").primaryKey(),
+    scanId: text("scan_id")
+      .notNull()
+      .references(() => scan.id, { onDelete: "cascade" }),
+    assetId: text("asset_id")
+      .notNull()
+      .references(() => asset.id, { onDelete: "cascade" }),
+    issuer: text("issuer"),
+    validFrom: timestamp("valid_from", { withTimezone: true }),
+    validTo: timestamp("valid_to", { withTimezone: true }),
+    daysRemaining: integer("days_remaining"),
+    protocol: text("protocol"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("ssl_snapshot_asset_idx").on(table.assetId),
+    index("ssl_snapshot_scan_idx").on(table.scanId),
+    index("ssl_snapshot_created_idx").on(table.createdAt),
   ],
 );
 
@@ -689,3 +920,13 @@ export type LoginHistory = typeof loginHistory.$inferSelect;
 export type SecurityEvent = typeof securityEvent.$inferSelect;
 export type Device = typeof device.$inferSelect;
 export type ApiKey = typeof apikey.$inferSelect;
+export type Asset = typeof asset.$inferSelect;
+export type NewAsset = typeof asset.$inferInsert;
+export type Scan = typeof scan.$inferSelect;
+export type NewScan = typeof scan.$inferInsert;
+export type ScanProfile = typeof scanProfile.$inferSelect;
+export type NewScanProfile = typeof scanProfile.$inferInsert;
+export type Finding = typeof finding.$inferSelect;
+export type NewFinding = typeof finding.$inferInsert;
+export type ScanFinding = typeof scanFinding.$inferSelect;
+export type SslSnapshot = typeof sslSnapshot.$inferSelect;

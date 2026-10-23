@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { FindingsTable } from "@/components/dashboard/FindingsTable";
-import { FilterIcon, PlusIcon } from "@/components/ui/icons";
+import { FindingsRegister } from "@/components/findings/FindingsRegister";
+import { BugIcon, FilterIcon } from "@/components/ui/icons";
 import { SocBadge, SocCard } from "@/components/ui/soc";
-import { SocButton, SocLink } from "@/components/ui/soc-button";
-import { requirePermission } from "@/lib/auth/server";
+import { SocButton } from "@/components/ui/soc-button";
+import { hasEffectivePermission, requirePermission } from "@/lib/auth/server";
+import { tenantScope } from "@/lib/tenancy";
 import { SEVERITY_META, SEVERITY_ORDER } from "@/lib/soc/severity";
-import { getFindingCounts, getFindings } from "@/services/dashboard";
+import { getFindingsPageData } from "@/services/findings";
+import { FINDING_STATUSES, type FindingStatus } from "@/types/findings";
 import type { Severity } from "@/types/dashboard";
 import { cn } from "@/lib/utils";
 
@@ -15,42 +17,69 @@ export const instant = false;
 
 export const metadata: Metadata = {
   title: "Findings",
-  description: "Filtered exposure register across every severity band.",
+  description: "Normalized exposure register across every severity band.",
 };
 
-function parseSeverity(value: string | string[] | undefined): Severity | undefined {
+function findValue<T extends string>(
+  values: readonly T[],
+  value: string | string[] | undefined,
+): T | undefined {
   const candidate = Array.isArray(value) ? value[0] : value;
-  return SEVERITY_ORDER.find((severity) => severity === candidate);
+  return values.find((item) => item === candidate);
 }
+
+function sortValue(
+  value: string | string[] | undefined,
+): "recent" | "severity" | "cvss" | "asset" | "status" {
+  const candidate = Array.isArray(value) ? value[0] : value;
+  return ["recent", "severity", "cvss", "asset", "status"].includes(
+    candidate ?? "",
+  )
+    ? (candidate as "recent" | "severity" | "cvss" | "asset" | "status")
+    : "severity";
+}
+
+const statusTone: Record<FindingStatus, "danger" | "accent" | "success" | "neutral"> = {
+  open: "danger",
+  "in-progress": "accent",
+  resolved: "success",
+  "accepted-risk": "neutral",
+};
 
 export default async function FindingsPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  await requirePermission("dashboard:read", { next: "/findings" });
+  const context = await requirePermission("dashboard:read", {
+    next: "/findings",
+  });
+  const scope = tenantScope(context);
   const params = await searchParams;
-  const severity = parseSeverity(params.severity);
-  const query = typeof params.q === "string" ? params.q : undefined;
 
-  const [findings, counts] = await Promise.all([
-    getFindings({ severity, query }),
-    getFindingCounts(),
-  ]);
-  const total = SEVERITY_ORDER.reduce(
-    (sum, key) => sum + counts[key],
-    0,
-  );
+  const severity = findValue<Severity>(SEVERITY_ORDER, params.severity);
+  const status = findValue<FindingStatus>(FINDING_STATUSES, params.status);
+  const sort = sortValue(params.sort);
+  const category =
+    typeof params.category === "string" && params.category
+      ? params.category
+      : undefined;
+  const assetId =
+    typeof params.assetId === "string" && params.assetId
+      ? params.assetId
+      : undefined;
+  const query = typeof params.q === "string" && params.q ? params.q : undefined;
 
-  const tabs = [
-    { key: undefined, label: "All", count: total, href: "/findings" },
-    ...SEVERITY_ORDER.map((key) => ({
-      key,
-      label: SEVERITY_META[key].label,
-      count: counts[key],
-      href: `/findings?severity=${key}`,
-    })),
-  ];
+  const data = await getFindingsPageData(scope, {
+    severity,
+    status,
+    category,
+    assetId,
+    query,
+    sort,
+  });
+  const canUpdate = hasEffectivePermission(context, "scanner:start");
+  const hasFilters = Boolean(severity || status || category || assetId || query);
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -63,104 +92,214 @@ export default async function FindingsPage({
             Findings
           </h1>
           <p className="mt-2 max-w-2xl text-xs leading-relaxed text-soc-muted">
-            Every open exposure, ranked by severity and grounded in the latest
-            scanner evidence. Filter by band to focus remediation.
+            Normalized findings persist across scans. Update remediation status
+            without losing the history that produced each exposure.
           </p>
         </div>
-        <SocLink href="/scanner" variant="primary" size="md">
-          <PlusIcon size={14} />
-          Run new scan
-        </SocLink>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/scans"
+            className="inline-flex h-9 items-center rounded-xl border border-soc-border bg-soc-elevated px-3 text-[10px] font-medium text-soc-fg outline-none transition hover:bg-soc-hover focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+          >
+            Open scan queue
+          </Link>
+        </div>
       </div>
+
+      <section aria-label="Findings summary" className="grid grid-cols-2 gap-2.5 lg:grid-cols-5">
+        <SocCard className="p-3.5">
+          <p className="text-[8px] font-semibold uppercase tracking-[0.14em] text-soc-faint">
+            Total findings
+          </p>
+          <p className="mt-2 text-2xl font-semibold tabular-nums text-soc-fg">
+            {data.counts.total}
+          </p>
+          <p className="mt-1 text-[9px] text-soc-faint">current register</p>
+        </SocCard>
+        {FINDING_STATUSES.map((value) => (
+          <Link
+            key={value}
+            href={
+              value === "open" && status === "open"
+                ? "/findings"
+                : `/findings?status=${value}`
+            }
+            className="rounded-2xl border border-soc-border bg-soc-panel p-3.5 outline-none transition hover:-translate-y-0.5 hover:border-soc-border-strong hover:bg-soc-hover focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[8px] font-semibold uppercase tracking-[0.14em] text-soc-faint">
+                {value === "in-progress"
+                  ? "In progress"
+                  : value === "accepted-risk"
+                    ? "Accepted risk"
+                    : value.charAt(0).toUpperCase() + value.slice(1)}
+              </p>
+              <SocBadge tone={statusTone[value]} className="px-1.5 py-0.5 text-[8px]">
+                {data.counts.status[value]}
+              </SocBadge>
+            </div>
+            <p className="mt-2 text-2xl font-semibold tabular-nums text-soc-fg">
+              {data.counts.status[value]}
+            </p>
+            <p className="mt-1 text-[9px] text-soc-faint">
+              {value === "resolved" ? "closed out" : "in the register"}
+            </p>
+          </Link>
+        ))}
+      </section>
 
       <SocCard className="p-3 sm:p-4">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap gap-1.5">
-            {tabs.map((tab) => {
-              const active = tab.key === severity;
-              return (
-                <Link
-                  key={tab.label}
-                  href={tab.href}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-medium outline-none transition focus-visible:ring-2 focus-visible:ring-soc-accent/60",
-                    active
-                      ? "border-soc-accent/30 bg-soc-accent-soft text-soc-accent"
-                      : "border-transparent text-soc-muted hover:bg-soc-hover hover:text-soc-fg",
-                  )}
-                >
-                  {tab.label}
-                  <span
-                    className={cn(
-                      "rounded px-1 py-0.5 text-[9px] tabular-nums",
-                      active
-                        ? "bg-soc-accent/15 text-soc-accent"
-                        : "bg-soc-hover text-soc-faint",
-                    )}
-                  >
-                    {tab.count}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-
-          <form
-            action="/findings"
-            method="get"
-            className="flex items-center gap-2"
-          >
-            {severity ? (
-              <input type="hidden" name="severity" value={severity} />
-            ) : null}
-            <label htmlFor="finding-search" className="sr-only">
-              Search findings
-            </label>
-            <input
-              id="finding-search"
-              name="q"
-              defaultValue={query ?? ""}
-              placeholder="Search CVE, target, category…"
-              className="h-8 w-full min-w-0 rounded-lg border border-soc-border bg-soc-elevated px-2.5 text-[10px] text-soc-fg outline-none placeholder:text-soc-faint focus-visible:ring-2 focus-visible:ring-soc-accent/60 sm:w-56"
-            />
+        <form action="/findings" method="get" className="space-y-3">
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="relative min-w-0 flex-1">
+              <label htmlFor="finding-search" className="sr-only">
+                Search findings
+              </label>
+              <input
+                id="finding-search"
+                name="q"
+                defaultValue={query ?? ""}
+                placeholder="Search title, category, asset or finding ID…"
+                className="h-9 w-full rounded-lg border border-soc-border bg-soc-elevated px-3 text-[11px] text-soc-fg outline-none placeholder:text-soc-faint focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+              />
+            </div>
             <SocButton type="submit" variant="secondary" size="sm">
               <FilterIcon size={12} />
-              Filter
+              Search
             </SocButton>
-          </form>
-        </div>
-
-        {severity || query ? (
-          <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-soc-border pt-3">
-            <span className="text-[9px] uppercase tracking-[0.14em] text-soc-faint">
-              Active filters
-            </span>
-            {severity ? (
-              <SocBadge tone={severity}>{SEVERITY_META[severity].label}</SocBadge>
-            ) : null}
-            {query ? <SocBadge tone="neutral">“{query}”</SocBadge> : null}
-            <Link
-              href="/findings"
-              className="text-[9px] font-medium text-soc-accent outline-none hover:text-soc-fg focus-visible:ring-2 focus-visible:ring-soc-accent/60"
-            >
-              Clear
-            </Link>
           </div>
-        ) : null}
+
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <label className="sr-only" htmlFor="finding-severity">
+              Severity
+            </label>
+            <select
+              id="finding-severity"
+              name="severity"
+              defaultValue={severity ?? ""}
+              className="h-8 rounded-lg border border-soc-border bg-soc-elevated px-2 text-[10px] text-soc-fg outline-none focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+            >
+              <option value="">All severities</option>
+              {SEVERITY_ORDER.map((value) => (
+                <option key={value} value={value}>
+                  {SEVERITY_META[value].label}
+                </option>
+              ))}
+            </select>
+
+            <label className="sr-only" htmlFor="finding-status">
+              Status
+            </label>
+            <select
+              id="finding-status"
+              name="status"
+              defaultValue={status ?? ""}
+              className="h-8 rounded-lg border border-soc-border bg-soc-elevated px-2 text-[10px] text-soc-fg outline-none focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+            >
+              <option value="">All statuses</option>
+              {FINDING_STATUSES.map((value) => (
+                <option key={value} value={value}>
+                  {value === "in-progress"
+                    ? "In progress"
+                    : value === "accepted-risk"
+                      ? "Accepted risk"
+                      : value.charAt(0).toUpperCase() + value.slice(1)}
+                </option>
+              ))}
+            </select>
+
+            <label className="sr-only" htmlFor="finding-category">
+              Category
+            </label>
+            <select
+              id="finding-category"
+              name="category"
+              defaultValue={category ?? ""}
+              className="h-8 rounded-lg border border-soc-border bg-soc-elevated px-2 text-[10px] text-soc-fg outline-none focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+            >
+              <option value="">All categories</option>
+              {data.categories.map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+
+            <label className="sr-only" htmlFor="finding-sort">
+              Sort
+            </label>
+            <select
+              id="finding-sort"
+              name="sort"
+              defaultValue={sort}
+              className="h-8 rounded-lg border border-soc-border bg-soc-elevated px-2 text-[10px] text-soc-fg outline-none focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+            >
+              <option value="severity">Severity</option>
+              <option value="recent">Last seen</option>
+              <option value="cvss">CVSS</option>
+              <option value="asset">Asset</option>
+              <option value="status">Status</option>
+            </select>
+          </div>
+
+          {assetId ? <input type="hidden" name="assetId" value={assetId} /> : null}
+
+          {hasFilters ? (
+            <div className="flex flex-wrap items-center gap-2 border-t border-soc-border pt-3">
+              <span className="text-[9px] uppercase tracking-[0.14em] text-soc-faint">
+                Active filters
+              </span>
+              {severity ? (
+                <SocBadge tone={severity}>
+                  {SEVERITY_META[severity].label}
+                </SocBadge>
+              ) : null}
+              {status ? (
+                <SocBadge tone={statusTone[status]}>
+                  {status === "in-progress"
+                    ? "In progress"
+                    : status === "accepted-risk"
+                      ? "Accepted risk"
+                      : status.charAt(0).toUpperCase() + status.slice(1)}
+                </SocBadge>
+              ) : null}
+              {category ? <SocBadge tone="neutral">{category}</SocBadge> : null}
+              {assetId ? <SocBadge tone="accent">Asset scoped</SocBadge> : null}
+              {query ? <SocBadge tone="neutral">“{query}”</SocBadge> : null}
+              <Link
+                href={assetId ? `/findings?assetId=${assetId}` : "/findings"}
+                className="text-[9px] font-medium text-soc-accent outline-none hover:text-soc-fg focus-visible:ring-2 focus-visible:ring-soc-accent/60"
+              >
+                Clear
+              </Link>
+            </div>
+          ) : null}
+        </form>
       </SocCard>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-[10px] text-soc-muted">
-          Showing <span className="font-semibold text-soc-fg">{findings.length}</span>{" "}
-          of {severity ? counts[severity] : total} findings
+          Showing{" "}
+          <span className="font-semibold text-soc-fg">{data.findings.length}</span>{" "}
+          findings
+          {data.counts.total !== data.findings.length
+            ? ` of ${data.counts.total}`
+            : ""}
         </p>
-        <p className="text-[9px] uppercase tracking-[0.14em] text-soc-faint">
-          Demo evidence · replace via service
-        </p>
+        <div className="flex items-center gap-2 text-[9px] text-soc-faint">
+          <BugIcon size={11} />
+          Live view · status updates refresh server data
+        </div>
       </div>
 
-      <FindingsTable findings={findings} />
+      <FindingsRegister findings={data.findings} canUpdate={canUpdate} />
+
+      {data.findings.length === 0 && data.counts.total > 0 ? (
+        <p className={cn("text-center text-[10px] text-soc-muted")}>
+          No findings match this view. Clear the filters to see all{" "}
+          {data.counts.total} findings.
+        </p>
+      ) : null}
     </div>
   );
 }

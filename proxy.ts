@@ -12,6 +12,7 @@ import { getSessionCookie } from "better-auth/cookies";
 const PROTECTED_PREFIXES = [
   "/dashboard",
   "/scanner",
+  "/scans",
   "/activity",
   "/findings",
   "/reports",

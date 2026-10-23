@@ -197,10 +197,23 @@ export interface Finding {
   target: string;
   severity: Severity;
   cvss: number;
-  status: "open" | "triaged" | "in-progress" | "resolved";
+  status: "open" | "in-progress" | "resolved" | "accepted-risk";
   category: string;
   detectedAt: string;
   owner: string;
+}
+
+export interface RecentScan {
+  id: string;
+  assetName: string;
+  target: string;
+  profileName: string;
+  status: string;
+  riskLevel: string;
+  securityScore: number;
+  findingCount: number;
+  createdAt: string;
+  completedAt: string | null;
 }
 
 export interface DashboardSnapshot {
@@ -213,6 +226,7 @@ export interface DashboardSnapshot {
     counters: SeveritySlice[];
   };
   recentFindings: Finding[];
+  recentScans: RecentScan[];
   quickActions: QuickAction[];
   threatLevel: ThreatLevel;
 }
